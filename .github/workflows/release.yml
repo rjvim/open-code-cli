@@ -32,6 +32,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          corepack enable pnpm
           pnpm ci
 
       # - name: Build
