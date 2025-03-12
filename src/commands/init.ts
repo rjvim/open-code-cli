@@ -3,10 +3,10 @@ import fs from "fs-extra";
 import { Command } from "commander";
 import prompts from "prompts";
 import { highlighter, logger, spinner, handleError } from "../utils/logger";
-import { 
-  createSourceRepoConfig, 
-  getSourceRepoConfig, 
-  createLocalTracking 
+import {
+  createSourceRepoConfig,
+  getSourceRepoConfig,
+  createLocalTracking,
 } from "../utils/config";
 import { cloneRepository, initRepositoryIfNeeded } from "../utils/git";
 import { initOptionsSchema, type SourceRepoConfig } from "../utils/schema";
@@ -14,24 +14,14 @@ import { initOptionsSchema, type SourceRepoConfig } from "../utils/schema";
 export const init = new Command()
   .name("init")
   .description("initialize your project and create configuration")
-  .option(
-    "--repo <repo>",
-    "URL of the source repository to initialize from"
-  )
+  .option("--repo <repo>", "URL of the source repository to initialize from")
   .option(
     "-c, --cwd <cwd>",
     "the working directory. defaults to the current directory.",
     process.cwd()
   )
-  .option(
-    "-f, --force",
-    "force overwrite of existing configuration.",
-    false
-  )
-  .option(
-    "--component-dir <componentDir>",
-    "directory for storing components"
-  )
+  .option("-f, --force", "force overwrite of existing configuration.", false)
+  .option("--component-dir <componentDir>", "directory for storing components")
   .action(async (opts) => {
     try {
       const options = initOptionsSchema.parse({
@@ -64,9 +54,7 @@ export async function runInit(options: {
     logger.error(
       `A configuration already exists at ${highlighter.info(options.cwd)}.`
     );
-    logger.error(
-      `Use ${highlighter.info("--force")} to overwrite it.`
-    );
+    logger.error(`Use ${highlighter.info("--force")} to overwrite it.`);
     process.exit(1);
   }
 
@@ -112,4 +100,68 @@ export async function runInit(options: {
     `Initializing project with repository ${highlighter.info(repoUrl)}`
   ).start();
 
-  try
+  // Complete the init.ts file
+  try {
+    // Clone the repository to a temporary directory
+    const { dir: repoDir } = await cloneRepository(repoUrl);
+
+    // Check for components in the repository
+    const componentsFound = await fs.pathExists(
+      path.join(repoDir, "components")
+    );
+
+    if (!componentsFound) {
+      initSpinner.warn("No components directory found in the repository.");
+    }
+
+    // Create component directory if it doesn't exist
+    const absoluteComponentDir = path.resolve(options.cwd, componentDir);
+    await fs.ensureDir(absoluteComponentDir);
+
+    // Initialize git repository if needed
+    await initRepositoryIfNeeded(options.cwd);
+
+    // Create configuration
+    const config: SourceRepoConfig = {
+      name: "open-code",
+      repositories: [
+        {
+          name: path.basename(repoUrl, ".git"),
+          url: repoUrl,
+          branch: "main",
+          components: [],
+        },
+      ],
+      componentDirectories: {
+        base: componentDir,
+      },
+    };
+
+    // Discover components if they exist
+    if (componentsFound) {
+      const components = await fs.readdir(path.join(repoDir, "components"));
+
+      for (const component of components) {
+        const componentPath = path.join("components", component);
+        if (await fs.pathExists(path.join(repoDir, componentPath))) {
+          config.repositories[0].components.push({
+            name: component,
+            path: componentPath,
+            description: `${component} component`,
+          });
+        }
+      }
+    }
+
+    // Create the configuration file
+    await createSourceRepoConfig(options.cwd, config);
+
+    // Create local tracking
+    await createLocalTracking(options.cwd);
+
+    initSpinner.succeed("Project initialized successfully");
+  } catch (error) {
+    initSpinner.fail("Failed to initialize project");
+    throw error;
+  }
+}
