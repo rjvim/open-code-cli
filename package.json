@@ -11,7 +11,7 @@
     }
   },
   "bin": {
-    "open-code": "./dist/index.js"
+    "open-code": "dist/index.js"
   },
   "scripts": {
     "dev": "tsup --watch",
@@ -45,5 +45,6 @@
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vitest": "^1.2.1"
-  }
+  },
+  "packageManager": "pnpm@10.6.2"
 }
