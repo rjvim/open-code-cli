@@ -11,7 +11,7 @@
     }
   },
   "bin": {
-    "open-code": "./dist/index.js"
+    "open-code": "dist/index.js"
   },
   "scripts": {
     "dev": "tsup --watch",
