@@ -37,3 +37,5 @@ This will:
 
 - Create a `.open-code.json` configuration file
 - Create a `.open-code.
+
+----
