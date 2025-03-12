@@ -1,6 +1,6 @@
 {
   "name": "open-code-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool for synchronizing and contributing to component-based codebases",
   "license": "MIT",
   "type": "module",
