@@ -5,7 +5,7 @@ import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 // Import all command registrations
-import { registerSyncCommand } from "./commands/sync";
+import { registerPullCommand } from "./commands/pull";
 import { registerInitCommand } from "./commands/init";
 // Future imports will go here
 
@@ -17,7 +17,7 @@ const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 // Register all commands from an array for better modularity
 const registerCommands = async (program: Command) => {
   const commandRegistrars = [
-    registerSyncCommand,
+    registerPullCommand,
     registerInitCommand,
     // Add future command registrars here
   ];

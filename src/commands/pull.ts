@@ -12,9 +12,9 @@ import {
   INVALID_SOURCE_PARAMETER,
 } from "../utils/errors";
 
-export async function registerSyncCommand(program: Command): Promise<void> {
+export async function registerPullCommand(program: Command): Promise<void> {
   program
-    .command("sync")
+    .command("pull")
     .description("Sync code from a GitHub repository")
     .argument("<source>", "GitHub repository URL")
     .argument("<destination>", "Local destination path")
@@ -23,15 +23,15 @@ export async function registerSyncCommand(program: Command): Promise<void> {
       "Create destination directory if it doesn't exist",
       false
     )
-    .action(sync);
+    .action(pull);
 }
 
-export async function sync(
+export async function pull(
   source: string,
   destination: string,
   options: SyncOptions
 ): Promise<void> {
-  logger.info("Starting sync...");
+  logger.info("Starting pull...");
 
   // Validate source parameter
   if (!source || typeof source !== "string") {
@@ -62,17 +62,17 @@ export async function sync(
       await downloadCode(repoInfo, validDestination);
       syncSpinner.text = "Tracking sync information...";
       await trackSync(source, repoInfo, validDestination);
-      syncSpinner.succeed("Sync completed successfully");
+      syncSpinner.succeed("Pull completed successfully");
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      syncSpinner.fail(`Sync failed: ${errorMessage}`);
+      syncSpinner.fail(`Pull failed: ${errorMessage}`);
       throw error;
     }
 
-    logger.success("Sync completed successfully");
+    logger.success("Pull completed successfully");
   } catch (error: any) {
-    logger.error(`Sync failed: ${error.message}`);
+    logger.error(`Pull failed: ${error.message}`);
     throw error;
   }
 }
