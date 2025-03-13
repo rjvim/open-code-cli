@@ -1,7 +1,7 @@
 # open-code-cli
 
 [![npm version](https://img.shields.io/npm/v/open-code-cli.svg)](https://www.npmjs.com/package/open-code-cli)
-[![Tests](https://github.com/rjvim/open-code-cli/actions/workflows/test.yml/badge.svg)](https://github.com/rjvim/open-code-cli/actions/workflows/test.yml)
+[![Tests](https://github.com/rjvim/open-code-cli/workflows/CI/badge.svg)](https://github.com/rjvim/open-code-cli/actions?query=workflow%3ACI)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A CLI tool for synchronizing code from GitHub repositories to your local environment.
