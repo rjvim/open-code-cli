@@ -8,7 +8,7 @@ export async function trackSync(
   repoInfo: RepoInfo,
   destination: string
 ): Promise<void> {
-  logger.info(`Tracking pull information for ${repoInfo.name}`);
+  logger.info(`Tracking sync information for ${repoInfo.name}`);
 
   const configPath = path.join(destination, ".open-code.json");
   const now = new Date().toISOString();

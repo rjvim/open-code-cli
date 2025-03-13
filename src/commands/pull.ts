@@ -56,17 +56,17 @@ export async function pull(
       options.create
     );
 
-    const syncSpinner = spinner("Downloading repository...");
-    syncSpinner.start();
+    const pullSpinner = spinner("Downloading repository...");
+    pullSpinner.start();
     try {
       await downloadCode(repoInfo, validDestination);
-      syncSpinner.text = "Tracking sync information...";
+      pullSpinner.text = "Tracking sync information...";
       await trackSync(source, repoInfo, validDestination);
-      syncSpinner.succeed("Pull completed successfully");
+      pullSpinner.succeed("Pull completed successfully");
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      syncSpinner.fail(`Pull failed: ${errorMessage}`);
+      pullSpinner.fail(`Pull failed: ${errorMessage}`);
       throw error;
     }
 
