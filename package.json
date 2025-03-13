@@ -19,7 +19,7 @@
     "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "pub:canary": "npx auto canary --force"
+    "pub:canary": "pnpm run build && npx auto canary --force"
   },
   "devDependencies": {
     "@auto-it/all-contributors": "^11.3.0",
