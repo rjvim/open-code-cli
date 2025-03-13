@@ -56,7 +56,7 @@ export interface SyncConfig {
 }
 
 /**
- * Options for the sync command
+ * Options for the pull command
  */
 export interface SyncOptions {
   /** Create destination directory if it doesn't exist */

@@ -39,17 +39,17 @@ This will:
 - Create a component directory
 - Optionally connect to a source repository
 
-### Sync Components
+### Pull Components
 
 ```bash
-open-code sync <source> <destination> [--create]
+open-code pull <source> <destination> [--create]
 ```
 
 This will:
 
 - Download code from a GitHub repository
 - Save it to the specified destination
-- Track sync information for future updates
+- Track pull information for future updates
 
 ## Configuration
 
