@@ -1,95 +1,41 @@
 # open-code-cli
 
-CLI tool for synchronizing and contributing to component-based codebases.
+A CLI tool for synchronizing code from GitHub repositories to your local environment.
 
 ## Overview
 
-open-code-cli allows developers to:
+`open-code-cli` allows developers to pull code from GitHub repositories and track the synced components. It's designed to be language-agnostic, making it suitable for any codebase.
 
-1. Sync components from source repositories
-2. Customize components for their specific needs
-3. Detect changes between local and source components
-4. Contribute changes back to source repositories via GitHub PRs
+## Usage
 
-The tool is designed to be language-agnostic and framework-agnostic, making it suitable for any component-based codebase.
-
-## Installation
+The recommended way to use `open-code-cli` is with npx:
 
 ```bash
-npm install -g open-code-cli
+npx open-code-cli pull <source> <destination> [--create]
 ```
 
-Or use it directly with npx:
+### Options
+- `<source>`: GitHub repository URL (supports both repository and specific file URLs)
+- `<destination>`: Local destination path
+- `--create`: Create the destination directory if it doesn't exist
+
+### Examples
 
 ```bash
-npx open-code-cli <command>
+# Pull an entire repository
+npx open-code-cli pull https://github.com/username/repo ./components
+
+# Pull a specific file
+npx open-code-cli pull https://github.com/username/repo/blob/main/path/to/file.js ./components
+
+# Pull a specific directory
+npx open-code-cli pull https://github.com/username/repo/tree/main/components/button ./my-components
 ```
-
-## Commands
-
-### Initialize a Project
-
-```bash
-open-code init [--repo <url>] [--component-dir <dir>]
-```
-
-This will:
-
-- Create a `.open-code.json` configuration file
-- Create a component directory
-- Optionally connect to a source repository
-
-### Pull Components
-
-```bash
-open-code pull <source> <destination> [--create]
-```
-
-This will:
-
-- Download code from a GitHub repository
-- Save it to the specified destination
-- Track pull information for future updates
 
 ## Configuration
 
-The `.open-code.json` file contains:
+The tool creates a `.open-code.json` file in the destination directory to track synced components for future reference.
 
-```typescript
-interface OpenCodeConfig {
-  version: string;
-  componentDir: string;
-  repositories: Array<{
-    name: string;
-    url: string;
-    branch: string;
-    filePath?: string;
-  }>;
-}
-```
+## License
 
-## Development
-
-### Project Structure
-
-```
-open-code-cli/
-├── src/
-│   ├── commands/     # Command implementations
-│   ├── types/        # TypeScript type definitions
-│   ├── utils/        # Utility functions
-│   └── index.ts      # Entry point
-├── tests/            # Test files
-└── package.json
-```
-
-### Contributing
-
-1. Fork the repository
-2. Create a new branch: `git checkout -b my-feature`
-3. Make your changes
-4. Run tests: `npm test`
-5. Submit a pull request
-
-
-----
+MIT
