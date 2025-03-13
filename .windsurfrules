@@ -1,38 +1,11 @@
 # open-code-cli Project Guide
 
-## Communication Protocol
-1. Break each request into numbered tasks (Task 1, Task 2, etc.)
-2. Present task list for confirmation
-3. Execute one task at a time after approval
-4. Track completed vs pending tasks
-5. Summarize progress when asked to "consolidate"
-
-## Development Workflow (TDD Approach)
-1. Start with test definitions that specify expected behavior
-2. Create interface/type definitions based on test requirements
-3. Implement minimal code to pass tests
-4. Refactor while maintaining test coverage
-5. Repeat for each feature component
-
-## Code Architecture
-- **Modular design**: Each command in separate module with registration pattern
-- **Consistent patterns**: Error handling, logging, UI feedback
-- **Progressive enhancement**: Core functionality first, then UX refinements
-- **Type safety**: Clear interfaces for all components and functions
-
 ## Implementation Priority
 1. Core CLI structure and command registration
 2. GitHub repo validation and download utilities
 3. Configuration and tracking mechanisms
 4. Enhanced UX with spinners and color-coded feedback
 5. Comprehensive test coverage for all components
-
-## Testing Strategy
-- Unit tests before implementation (TDD principle)
-- Mock tests for external API interactions
-- Command flow tests with various inputs
-- Error case coverage
-- Integration tests for end-to-end workflows
 
 ## Repository Guidelines
 - This is a public repository, be respectful and ensure content makes sense to others
@@ -50,7 +23,6 @@
 - Double-check changes before committing, pushing, and creating PRs
 - For larger tasks, consider creating detailed GitHub issues for tracking
 
-## Commit Message Guidelines
-- Include type in title
-- Do not include full file paths in commit messages
-- Use title and body to summarize changes
+
+## Code Architecture
+- **Modular design**: Each command in separate module with registration pattern
