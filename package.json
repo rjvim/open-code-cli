@@ -4,31 +4,21 @@
   "description": "CLI tool for synchronizing and contributing to component-based codebases",
   "license": "MIT",
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+  "bin": {
+    "open-code": "./dist/index.js"
   },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
-  "bin": {
-    "open-code": "dist/index.js"
-  },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "ncc build ./src/index.ts -w -o dist/",
+    "build": "ncc build ./src/index.ts -o ./dist/ --minify --no-cache --no-source-map-register",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "release": "changeset version",
-    "pub:beta": "pnpm build && pnpm publish --no-git-checks --access public --tag beta",
-    "pub:next": "pnpm build && pnpm publish --no-git-checks --access public --tag next",
-    "pub:release": "pnpm build && pnpm publish --access public",
     "pub:canary": "npx auto canary --force"
   },
   "devDependencies": {
@@ -38,10 +28,10 @@
     "@auto-it/omit-commits": "^11.3.0",
     "@auto-it/omit-release-notes": "^11.3.0",
     "@auto-it/released": "^11.3.0",
-    "@changesets/cli": "^2.28.1",
     "@types/cross-spawn": "^6.0.6",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.5",
+    "@vercel/ncc": "0.38.1",
     "auto": "^11.3.0",
     "commander": "^11.1.0",
     "cross-spawn": "^7.0.6",
@@ -51,10 +41,8 @@
     "ora": "^8.2.0",
     "rimraf": "^5.0.5",
     "tar": "^7.4.3",
-    "tsup": "^8.0.1",
     "type-fest": "^4.37.0",
     "typescript": "^5.3.3",
-    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^1.2.1"
   },
   "packageManager": "pnpm@10.6.2"
