@@ -1,28 +1,19 @@
-// tests/utils/destination.test.ts
-
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import path from "path";
 import { prepareDestination } from "../../src/utils/destination";
+import {
+  DESTINATION_PATH_MISSING,
+  DESTINATION_NOT_DIRECTORY,
+} from "../../src/utils/errors";
 
-// Mock fs-extra properly with default export
-vi.mock("fs-extra", () => {
-  return {
-    default: {
-      existsSync: vi.fn(),
-      ensureDirSync: vi.fn(),
-      statSync: vi.fn().mockReturnValue({
-        isDirectory: vi.fn(),
-      }),
-    },
+vi.mock("fs-extra", () => ({
+  default: {
     existsSync: vi.fn(),
     ensureDirSync: vi.fn(),
-    statSync: vi.fn().mockReturnValue({
-      isDirectory: vi.fn(),
-    }),
-  };
-});
+    statSync: vi.fn(),
+  },
+}));
 
-// Import fs after mocking
 import fs from "fs-extra";
 
 describe("prepareDestination", () => {
@@ -30,7 +21,7 @@ describe("prepareDestination", () => {
     vi.clearAllMocks();
   });
 
-  it("creates directory if it doesn't exist and createIfMissing is true", async () => {
+  it("creates directory if missing and createIfMissing is true", async () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
 
     await expect(prepareDestination("/new/path", true)).resolves.toEqual(
@@ -39,11 +30,13 @@ describe("prepareDestination", () => {
     expect(fs.ensureDirSync).toHaveBeenCalledWith(path.resolve("/new/path"));
   });
 
-  it("throws error if path doesn't exist and createIfMissing is false", async () => {
+  it("throws DESTINATION_PATH_MISSING when path missing and createIfMissing false", async () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
 
     await expect(prepareDestination("/new/path", false)).rejects.toThrow(
-      "Destination path does not exist"
+      expect.objectContaining({
+        code: DESTINATION_PATH_MISSING,
+      })
     );
   });
 
@@ -56,12 +49,14 @@ describe("prepareDestination", () => {
     );
   });
 
-  it("throws error for existing path that is not a directory", async () => {
+  it("throws DESTINATION_NOT_DIRECTORY for non-directory path", async () => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => false } as any);
 
     await expect(prepareDestination("/invalid/file.txt")).rejects.toThrow(
-      "Destination path is not a directory"
+      expect.objectContaining({
+        code: DESTINATION_NOT_DIRECTORY,
+      })
     );
   });
 });

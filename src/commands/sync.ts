@@ -6,6 +6,7 @@ import { logger } from "../utils/logger";
 import fs from "fs-extra";
 import path from "path";
 import { prepareDestination } from "../utils/destination";
+import { validateSource } from "../utils/validate-source";
 
 interface SyncConfig {
   source: string;
@@ -61,35 +62,6 @@ async function sync(
     logger.success("Sync completed successfully");
   } catch (error: any) {
     logger.error(`Sync failed: ${error.message}`);
-  }
-}
-
-export async function validateSource(source: string) {
-  logger.info("Validating source...");
-
-  try {
-    const url = new URL(source);
-
-    // Check if URL is a GitHub repository
-    if (url.hostname !== "github.com") {
-      throw new Error(
-        "Invalid GitHub URL: Only GitHub repositories are supported"
-      );
-    }
-
-    const repoInfo = await getRepoInfo(url);
-    if (!repoInfo) {
-      throw new Error(
-        "Invalid GitHub URL: Unable to parse repository information"
-      );
-    }
-
-    return repoInfo;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Invalid GitHub URL: ${error.message}`);
-    }
-    throw new Error("Invalid GitHub URL");
   }
 }
 

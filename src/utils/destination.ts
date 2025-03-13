@@ -1,17 +1,9 @@
-// src/utils/destination.ts
-
 import fs from "fs-extra";
 import path from "path";
 import { logger } from "./logger";
+import { OpenCodeError } from "./custom-error";
+import { DESTINATION_PATH_MISSING, DESTINATION_NOT_DIRECTORY } from "./errors";
 
-/**
- * Prepares the destination directory by validating and creating it if needed
- *
- * @param destination Path to prepare
- * @param createIfMissing Whether to create the directory if it doesn't exist
- * @returns Prepared destination path
- * @throws Error if path doesn't exist (and createIfMissing is false) or is not a directory
- */
 export async function prepareDestination(
   destination: string,
   createIfMissing: boolean = true
@@ -23,12 +15,18 @@ export async function prepareDestination(
       logger.info(`Creating directory: ${destination}`);
       fs.ensureDirSync(destination);
     } else {
-      throw new Error(`Destination path does not exist: ${destination}`);
+      throw new OpenCodeError(
+        DESTINATION_PATH_MISSING,
+        `Destination path does not exist: ${destination}`
+      );
     }
   } else {
     const stats = fs.statSync(destination);
     if (!stats.isDirectory()) {
-      throw new Error(`Destination path is not a directory: ${destination}`);
+      throw new OpenCodeError(
+        DESTINATION_NOT_DIRECTORY,
+        `Destination path is not a directory: ${destination}`
+      );
     }
   }
 
