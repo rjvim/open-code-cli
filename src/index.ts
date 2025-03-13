@@ -1,18 +1,20 @@
-// src/index.ts
-import { Command } from "commander";
-import { green } from "kleur/colors";
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+#!/usr/bin/env node
+/* eslint-disable import/no-extraneous-dependencies */
+
+import {Command} from 'commander';
+import {green} from 'kleur/colors';
+import {readFileSync} from 'fs';
+import {fileURLToPath} from 'url';
+import {dirname, join} from 'path';
 // Import all command registrations
-import { registerPullCommand } from "./commands/pull";
-import { registerInitCommand } from "./commands/init";
+import {registerPullCommand} from './commands/pull';
+import {registerInitCommand} from './commands/init';
 // Future imports will go here
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const packageJsonPath = join(__dirname, "../package.json");
-const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+const packageJsonPath = join(__dirname, '../package.json');
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
 // Register all commands from an array for better modularity
 const registerCommands = async (program: Command) => {
@@ -29,14 +31,14 @@ const registerCommands = async (program: Command) => {
 
 async function main() {
   const program = new Command()
-    .name("open-code")
+    .name('open-code')
     .description(
-      "CLI tool for synchronizing and contributing to component-based codebases"
+      'CLI tool for synchronizing and contributing to component-based codebases'
     )
     .version(
       packageJson.version,
-      "-v, --version",
-      "display the version number"
+      '-v, --version',
+      'display the version number'
     );
 
   await registerCommands(program);
