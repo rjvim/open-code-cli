@@ -1,6 +1,6 @@
 import { downloadAndExtractRepo } from "./repo";
 import { logger } from "./logger";
-import type { RepoInfo } from "./repo";
+import { RepoInfo } from "../types";
 import { OpenCodeError } from "./custom-error";
 import { DOWNLOAD_FAILED } from "./errors";
 

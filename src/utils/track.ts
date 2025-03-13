@@ -1,15 +1,7 @@
-// src/utils/track.ts
 import fs from "fs-extra";
 import path from "path";
-import type { RepoInfo } from "./repo";
+import { RepoInfo, SyncConfig } from "../types";
 import { logger } from "./logger";
-
-interface SyncConfig {
-  source: string;
-  repository: RepoInfo;
-  lastSynced: string;
-  version: string;
-}
 
 export async function trackSync(
   source: string,
@@ -24,7 +16,7 @@ export async function trackSync(
   let config: SyncConfig;
 
   if (fs.existsSync(configPath)) {
-    config = fs.readJsonSync(configPath);
+    config = fs.readJsonSync(configPath) as SyncConfig;
     config.lastSynced = now;
   } else {
     config = {

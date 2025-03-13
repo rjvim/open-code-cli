@@ -4,13 +4,7 @@ import { sep, posix } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { x } from "tar";
 import { spinner } from "./spinner";
-
-export type RepoInfo = {
-  username: string;
-  name: string;
-  branch: string;
-  filePath: string;
-};
+import { RepoInfo } from "../types";
 
 export async function isUrlOk(url: string): Promise<boolean> {
   try {

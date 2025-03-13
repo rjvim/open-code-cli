@@ -1,5 +1,3 @@
-// src/commands/sync.ts
-
 import { Command } from "commander";
 import { logger } from "../utils/logger";
 import { prepareDestination } from "../utils/destination";
@@ -7,20 +5,9 @@ import { validateSource } from "../utils/validate-source";
 import { downloadCode } from "../utils/download";
 import { trackSync } from "../utils/track";
 import { spinner } from "../utils/spinner";
+import { SyncOptions, RepoInfo } from "../types";
 
-interface SyncConfig {
-  source: string;
-  repository: {
-    username: string;
-    name: string;
-    branch: string;
-    filepath: string;
-  };
-  lastSynced: string;
-  version: string;
-}
-
-export async function registerSyncCommand(program: Command) {
+export async function registerSyncCommand(program: Command): Promise<void> {
   program
     .command("sync")
     .description("Sync code from a GitHub repository")
@@ -37,13 +24,13 @@ export async function registerSyncCommand(program: Command) {
 export async function sync(
   source: string,
   destination: string,
-  options: { create?: boolean }
-) {
+  options: SyncOptions
+): Promise<void> {
   logger.info("Starting sync...");
 
   try {
-    const repoInfo = await validateSource(source);
-    const validDestination = await prepareDestination(
+    const repoInfo: RepoInfo = await validateSource(source);
+    const validDestination: string = await prepareDestination(
       destination,
       options.create
     );

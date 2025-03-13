@@ -1,17 +1,11 @@
 import { Command } from "commander";
 import fs from "fs-extra";
-import path from "path";
 import { spinner } from "../utils/spinner";
 import { logger } from "../utils/logger";
 import { validateSource } from "../utils/validate-source";
-import { prepareDestination } from "../utils/destination";
-import { OpenCodeError } from "../utils/custom-error";
+import { OpenCodeConfig, InitOptions, Repository } from "../types";
 
-interface InitOptions {
-  componentDir?: string;
-}
-
-export async function registerInitCommand(program: Command) {
+export async function registerInitCommand(program: Command): Promise<void> {
   program
     .command("init")
     .description("Initialize a new open-code project")
@@ -24,26 +18,31 @@ export async function registerInitCommand(program: Command) {
     .action(init);
 }
 
-export async function init(repo?: string, options: InitOptions = {}) {
+export async function init(
+  repo?: string,
+  options: InitOptions = {}
+): Promise<void> {
   const initSpinner = spinner("Initializing open-code project...");
   initSpinner.start();
 
   try {
     // Create configuration
-    const config = {
+    const config: OpenCodeConfig = {
       version: "1.0.0",
       componentDir: options.componentDir || "components",
-      repositories: [] as any[],
+      repositories: [],
     };
 
     // Add repository if provided
     if (repo) {
       const repoInfo = await validateSource(repo);
-      config.repositories.push({
+      const repository: Repository = {
         name: repoInfo.name,
         url: repo,
         branch: repoInfo.branch,
-      });
+        filePath: repoInfo.filePath,
+      };
+      config.repositories.push(repository);
     }
 
     // Write config file
