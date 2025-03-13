@@ -45,6 +45,31 @@ async function sync(source: string, destination: string) {
 
 export async function validateSource(source: string) {
   logger.info("Validating source...");
+
+  try {
+    const url = new URL(source);
+
+    // Check if URL is a GitHub repository
+    if (url.hostname !== "github.com") {
+      throw new Error(
+        "Invalid GitHub URL: Only GitHub repositories are supported"
+      );
+    }
+
+    const repoInfo = await getRepoInfo(url);
+    if (!repoInfo) {
+      throw new Error(
+        "Invalid GitHub URL: Unable to parse repository information"
+      );
+    }
+
+    return repoInfo;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Invalid GitHub URL: ${error.message}`);
+    }
+    throw new Error("Invalid GitHub URL");
+  }
 }
 
 async function prepareDestination(destination: string) {
