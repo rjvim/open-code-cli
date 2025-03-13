@@ -1,6 +1,8 @@
 import { downloadAndExtractRepo } from "./repo";
 import { logger } from "./logger";
 import type { RepoInfo } from "./repo";
+import { OpenCodeError } from "./custom-error";
+import { DOWNLOAD_FAILED } from "./errors";
 
 export async function downloadCode(
   repoInfo: RepoInfo,
@@ -12,15 +14,11 @@ export async function downloadCode(
       `Successfully downloaded ${repoInfo.name} to ${destination}`
     );
   } catch (error) {
-    logger.error(
-      `Failed to download repository: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
-    throw new Error(
-      `Failed to download repository: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to download repository: ${errorMessage}`);
+    throw new OpenCodeError(
+      DOWNLOAD_FAILED,
+      `Failed to download repository: ${errorMessage}`
     );
   }
 }

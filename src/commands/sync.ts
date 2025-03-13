@@ -6,6 +6,7 @@ import { prepareDestination } from "../utils/destination";
 import { validateSource } from "../utils/validate-source";
 import { downloadCode } from "../utils/download";
 import { trackSync } from "../utils/track";
+import { spinner } from "../utils/spinner";
 
 interface SyncConfig {
   source: string;
@@ -47,8 +48,19 @@ export async function sync(
       options.create
     );
 
-    await downloadCode(repoInfo, validDestination);
-    await trackSync(source, repoInfo, validDestination);
+    const syncSpinner = spinner("Downloading repository...");
+    syncSpinner.start();
+    try {
+      await downloadCode(repoInfo, validDestination);
+      syncSpinner.text = "Tracking sync information...";
+      await trackSync(source, repoInfo, validDestination);
+      syncSpinner.succeed("Sync completed successfully");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      syncSpinner.fail(`Sync failed: ${errorMessage}`);
+      throw error;
+    }
 
     logger.success("Sync completed successfully");
   } catch (error: any) {

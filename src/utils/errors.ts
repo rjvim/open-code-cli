@@ -4,3 +4,4 @@ export const GITHUB_URL_PARSE_ERROR = "15";
 export const NON_GITHUB_URL = "16";
 export const DESTINATION_PATH_MISSING = "17";
 export const DESTINATION_NOT_DIRECTORY = "18";
+export const DOWNLOAD_FAILED = "19";
