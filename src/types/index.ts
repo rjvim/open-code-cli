@@ -42,17 +42,25 @@ export interface RepoInfo {
 }
 
 /**
- * Sync tracking information stored in .open-code.json
+ * Information about a tracked file
  */
-export interface SyncConfig {
-  /** Source repository URL */
+export interface TrackedFile {
+  /** Source URL */
   source: string;
   /** Repository information */
   repository: RepoInfo;
   /** ISO timestamp of last sync */
   lastSynced: string;
+}
+
+/**
+ * Sync tracking information stored in .open-code.json
+ */
+export interface SyncConfig {
   /** Configuration version */
   version: string;
+  /** Tracked files */
+  files: Record<string, TrackedFile>;
 }
 
 /**

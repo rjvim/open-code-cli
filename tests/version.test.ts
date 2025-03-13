@@ -13,8 +13,8 @@ describe("Version command", () => {
       expect(error.stderr).toContain(
         "CLI tool for synchronizing and contributing to component-based codebases"
       );
-      // Check stderr contains command info
-      expect(error.stderr).toContain("sync <source> <destination>");
+      // Check stderr contains command info for pull command
+      expect(error.stderr).toContain("pull [options] <source> <destination>");
     }
   });
 });

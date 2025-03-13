@@ -29,21 +29,34 @@ describe("trackSync", () => {
     expect(fs.writeJsonSync).toHaveBeenCalledWith(
       path.join(mockPath, ".open-code.json"),
       {
-        source: mockSource,
-        repository: mockRepoInfo,
-        lastSynced: expect.any(String),
         version: "1.0.0",
+        files: {
+          [mockRepoInfo.filePath]: {
+            source: mockSource,
+            repository: mockRepoInfo,
+            lastSynced: expect.any(String),
+          },
+        },
       },
       { spaces: 2 }
     );
   });
 
-  it("updates existing sync tracking file", async () => {
+  it("updates existing sync tracking file with new format", async () => {
     const existingConfig = {
-      source: mockSource,
-      repository: mockRepoInfo,
-      lastSynced: "2024-01-01",
       version: "1.0.0",
+      files: {
+        "components/existing": {
+          source: "https://github.com/test-user/test-repo",
+          repository: {
+            username: "test-user",
+            name: "test-repo",
+            branch: "main",
+            filePath: "components/existing",
+          },
+          lastSynced: "2024-01-01",
+        },
+      },
     };
 
     vi.mocked(fs.existsSync).mockReturnValue(true);
@@ -54,8 +67,54 @@ describe("trackSync", () => {
     expect(fs.writeJsonSync).toHaveBeenCalledWith(
       path.join(mockPath, ".open-code.json"),
       {
-        ...existingConfig,
-        lastSynced: expect.any(String),
+        version: "1.0.0",
+        files: {
+          "components/existing": existingConfig.files["components/existing"],
+          [mockRepoInfo.filePath]: {
+            source: mockSource,
+            repository: mockRepoInfo,
+            lastSynced: expect.any(String),
+          },
+        },
+      },
+      { spaces: 2 }
+    );
+  });
+
+  it("migrates from old format to new format", async () => {
+    const oldFormatConfig = {
+      source: "https://github.com/test-user/test-repo",
+      repository: {
+        username: "test-user",
+        name: "test-repo",
+        branch: "main",
+        filePath: "components/old",
+      },
+      lastSynced: "2024-01-01",
+      version: "1.0.0",
+    };
+
+    vi.mocked(fs.existsSync).mockReturnValue(true);
+    vi.mocked(fs.readJsonSync).mockReturnValue(oldFormatConfig);
+
+    await trackSync(mockSource, mockRepoInfo, mockPath);
+
+    expect(fs.writeJsonSync).toHaveBeenCalledWith(
+      path.join(mockPath, ".open-code.json"),
+      {
+        version: "1.0.0",
+        files: {
+          "components/old": {
+            source: oldFormatConfig.source,
+            repository: oldFormatConfig.repository,
+            lastSynced: oldFormatConfig.lastSynced,
+          },
+          [mockRepoInfo.filePath]: {
+            source: mockSource,
+            repository: mockRepoInfo,
+            lastSynced: expect.any(String),
+          },
+        },
       },
       { spaces: 2 }
     );
