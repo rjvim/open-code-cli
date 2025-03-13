@@ -6,6 +6,11 @@ import { downloadCode } from "../utils/download";
 import { trackSync } from "../utils/track";
 import { spinner } from "../utils/spinner";
 import { SyncOptions, RepoInfo } from "../types";
+import { OpenCodeError } from "../utils/custom-error";
+import {
+  INVALID_DESTINATION_PARAMETER,
+  INVALID_SOURCE_PARAMETER,
+} from "../utils/errors";
 
 export async function registerSyncCommand(program: Command): Promise<void> {
   program
@@ -27,6 +32,22 @@ export async function sync(
   options: SyncOptions
 ): Promise<void> {
   logger.info("Starting sync...");
+
+  // Validate source parameter
+  if (!source || typeof source !== "string") {
+    throw new OpenCodeError(
+      INVALID_SOURCE_PARAMETER,
+      "Source parameter must be a valid string"
+    );
+  }
+
+  // Validate destination parameter
+  if (!destination || typeof destination !== "string") {
+    throw new OpenCodeError(
+      INVALID_DESTINATION_PARAMETER,
+      "Destination parameter must be a valid string"
+    );
+  }
 
   try {
     const repoInfo: RepoInfo = await validateSource(source);

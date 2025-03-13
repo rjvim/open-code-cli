@@ -4,6 +4,8 @@ import { spinner } from "../utils/spinner";
 import { logger } from "../utils/logger";
 import { validateSource } from "../utils/validate-source";
 import { OpenCodeConfig, InitOptions, Repository } from "../types";
+import { OpenCodeError } from "../utils/custom-error";
+import { INVALID_COMPONENT_DIR, INVALID_REPO_PARAMETER } from "../utils/errors";
 
 export async function registerInitCommand(program: Command): Promise<void> {
   program
@@ -24,6 +26,24 @@ export async function init(
 ): Promise<void> {
   const initSpinner = spinner("Initializing open-code project...");
   initSpinner.start();
+
+  // Validate repo parameter if provided
+  if (repo !== undefined && (typeof repo !== "string" || repo.trim() === "")) {
+    initSpinner.fail("Invalid repository parameter");
+    throw new OpenCodeError(
+      INVALID_REPO_PARAMETER,
+      "Repository parameter must be a valid string"
+    );
+  }
+
+  // Validate component directory
+  if (options.componentDir && typeof options.componentDir !== "string") {
+    initSpinner.fail("Invalid component directory");
+    throw new OpenCodeError(
+      INVALID_COMPONENT_DIR,
+      "Component directory must be a valid string"
+    );
+  }
 
   try {
     // Create configuration

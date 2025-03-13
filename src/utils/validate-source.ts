@@ -10,8 +10,19 @@ import {
 export async function validateSource(source: string) {
   logger.info("Validating source...");
 
+  if (!source || source.trim() === "") {
+    throw new OpenCodeError(INVALID_GITHUB_URL, "GitHub URL cannot be empty");
+  }
+
   try {
     const url = new URL(source);
+
+    if (url.protocol !== "https:") {
+      throw new OpenCodeError(
+        INVALID_GITHUB_URL,
+        "GitHub URL must use HTTPS protocol"
+      );
+    }
 
     if (url.hostname !== "github.com") {
       throw new OpenCodeError(

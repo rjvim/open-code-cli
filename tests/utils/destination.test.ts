@@ -11,6 +11,7 @@ vi.mock("fs-extra", () => ({
     existsSync: vi.fn(),
     ensureDirSync: vi.fn(),
     statSync: vi.fn(),
+    readdirSync: vi.fn(), // Add this mock
   },
 }));
 
@@ -19,6 +20,7 @@ import fs from "fs-extra";
 describe("prepareDestination", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(fs.readdirSync).mockReturnValue([]); // Mock empty directory
   });
 
   it("creates directory if missing and createIfMissing is true", async () => {
