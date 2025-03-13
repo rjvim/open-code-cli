@@ -33,7 +33,7 @@ export async function registerSyncCommand(program: Command) {
     .action(sync);
 }
 
-async function sync(
+export async function sync(
   source: string,
   destination: string,
   options: { create?: boolean }
