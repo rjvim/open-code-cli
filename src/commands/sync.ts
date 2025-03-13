@@ -5,6 +5,7 @@ import { getRepoInfo, downloadAndExtractRepo } from "../utils/repo";
 import { logger } from "../utils/logger";
 import fs from "fs-extra";
 import path from "path";
+import { prepareDestination } from "../utils/destination";
 
 interface SyncConfig {
   source: string;
@@ -24,22 +25,42 @@ export async function registerSyncCommand(program: Command) {
     .description("Sync code from a GitHub repository")
     .argument("<source>", "GitHub repository URL")
     .argument("<destination>", "Local destination path")
+    .option(
+      "-c, --create",
+      "Create destination directory if it doesn't exist",
+      false
+    )
     .action(sync);
 }
 
-async function sync(source: string, destination: string) {
+async function sync(
+  source: string,
+  destination: string,
+  options: { create?: boolean }
+) {
   logger.info("Starting sync...");
   logger.info(`Source: ${source}`);
   logger.info(`Destination: ${destination}`);
 
   try {
-    await validateSource(source);
-    await prepareDestination(destination);
-    await downloadCode(source, destination);
-    await trackSync(source, destination);
+    // Validate source
+    const repoInfo = await validateSource(source);
+
+    // Prepare destination (includes validation)
+    const validDestination = await prepareDestination(
+      destination,
+      options.create
+    );
+
+    // Download code
+    await downloadCode(repoInfo, validDestination);
+
+    // Track sync
+    await trackSync(source, repoInfo, validDestination);
+
     logger.success("Sync completed successfully");
-  } catch (error) {
-    logger.error("Sync failed:", error);
+  } catch (error: any) {
+    logger.error(`Sync failed: ${error.message}`);
   }
 }
 
@@ -72,14 +93,12 @@ export async function validateSource(source: string) {
   }
 }
 
-async function prepareDestination(destination: string) {
-  logger.info("Preparing destination...");
-}
-
-async function downloadCode(source: string, destination: string) {
+async function downloadCode(repoInfo: any, destination: string) {
   logger.info("Downloading code...");
+  // Implementation to be added
 }
 
-async function trackSync(source: string, destination: string) {
+async function trackSync(source: string, repoInfo: any, destination: string) {
   logger.info("Tracking sync...");
+  // Implementation to be added
 }
