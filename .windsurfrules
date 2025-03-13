@@ -49,3 +49,8 @@
 - Update documentation only after implementing described behavior
 - Double-check changes before committing, pushing, and creating PRs
 - For larger tasks, consider creating detailed GitHub issues for tracking
+
+## Commit Message Guidelines
+- Include type in title
+- Do not include full file paths in commit messages
+- Use title and body to summarize changes
