@@ -24,6 +24,15 @@ export async function getRepoInfo(
     ? examplePath.replace(/^\//, "")
     : file.join("/");
 
+  // Support for blob URLs (direct file links)
+  if (username && name && _branch && (t === "tree" || t === "blob")) {
+    const branch = examplePath
+      ? `${_branch}/${file.join("/")}`.replace(new RegExp(`/${filePath}|/$`), "")
+      : _branch;
+    
+    return { username, name, branch, filePath };
+  }
+
   if (
     // Support repos whose entire purpose is to be a Next.js example, e.g.
     // https://github.com/:username/:my-cool-nextjs-example-repo-name.
