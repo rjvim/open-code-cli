@@ -90,3 +90,6 @@ open-code-cli/
 3. Make your changes
 4. Run tests: `npm test`
 5. Submit a pull request
+
+
+----
