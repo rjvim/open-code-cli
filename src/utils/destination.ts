@@ -30,5 +30,7 @@ export async function prepareDestination(
     }
   }
 
+  logger.info(`Destination prepared: ${destination}`);
+
   return destination;
 }

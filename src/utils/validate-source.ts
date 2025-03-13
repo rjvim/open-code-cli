@@ -28,6 +28,10 @@ export async function validateSource(source: string) {
       );
     }
 
+    logger.info(
+      `Valid GitHub repository: ${repoInfo.username}/${repoInfo.name}`
+    );
+
     return repoInfo;
   } catch (error) {
     if (error instanceof OpenCodeError) {

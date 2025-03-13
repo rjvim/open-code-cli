@@ -2,6 +2,7 @@
 import fs from "fs-extra";
 import path from "path";
 import type { RepoInfo } from "./repo";
+import { logger } from "./logger";
 
 interface SyncConfig {
   source: string;
@@ -15,6 +16,8 @@ export async function trackSync(
   repoInfo: RepoInfo,
   destination: string
 ): Promise<void> {
+  logger.info(`Tracking sync information for ${repoInfo.name}`);
+
   const configPath = path.join(destination, ".open-code.json");
   const now = new Date().toISOString();
 
