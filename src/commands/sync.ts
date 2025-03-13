@@ -43,7 +43,7 @@ async function sync(source: string, destination: string) {
   }
 }
 
-async function validateSource(source: string) {
+export async function validateSource(source: string) {
   logger.info("Validating source...");
 }
 
