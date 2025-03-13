@@ -4,6 +4,7 @@ import { green } from "kleur/colors";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { registerSyncCommand } from "./commands/sync";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,8 @@ async function main() {
     );
 
   // Add more commands here in the future
+
+  await registerSyncCommand(program);
 
   program.parse();
 
