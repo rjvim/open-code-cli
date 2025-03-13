@@ -50,6 +50,15 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err);
+  if (err.name === "OpenCodeError") {
+    console.error(`Error: ${err.message}`);
+    if (err.details) {
+      console.error("Details:", err.details);
+    }
+  } else {
+    // For unexpected errors, show a simplified message
+    console.error(`Unexpected error: ${err.message}`);
+    // Optionally log the full error to a file for debugging
+  }
   process.exit(1);
 });
